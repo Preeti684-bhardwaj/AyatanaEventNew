@@ -176,7 +176,7 @@ class UserController extends BaseController {
 
   signin = async (req, res) => {
     const { email, password } = req.body;
-    if (!phone || !password) {
+    if (!email || !password) {
       return res.status(400).send({ message: "Please Enter Phone & Password" });
     }
     try {
