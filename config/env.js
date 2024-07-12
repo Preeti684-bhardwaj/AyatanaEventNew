@@ -1,6 +1,6 @@
 const env = {
   database: 'ayatanaserver',
-   username: 'ayatanauser',
+  username: 'ayatanauser',
   password: 'ayatanauser123',
   host: 'localhost',
   dialect: 'postgres',

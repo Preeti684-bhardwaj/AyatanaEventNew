@@ -47,6 +47,7 @@ class UserController extends BaseController {
     this.router.post("/resetpassword/:userId", this.resetPassword.bind(this));
     this.router.post("/sendOtp", this.sendOtp.bind(this));
     this.router.post("/guestLogin", this.guestUser.bind(this));
+    this.router.post("/otpVerification",this.emailOtpVerification.bind(this));
   }
 
   listArgVerify(req, res, queryOptions) {
@@ -173,14 +174,66 @@ class UserController extends BaseController {
       });
     }
   };
-
+   
+//   Email OTP verification
+ emailOtpVerification =async (req, res) => {
+    const { phone, otp} = req.body;
+  
+    // Validate the OTP
+    if (!otp) {
+      return res
+        .status(400)
+        .json({ success: false, message: "OTP is required." });
+    }
+  
+    try {
+      const user = await models.User.findOne({ where: { phone } });
+      console.log(user);
+      if (!user) {
+        return res.status(400).json({
+          success: false,
+          message: "User not found or invalid details.",
+        });
+      }
+  
+      // Check OTP validity
+      if (user.otp !== otp) {
+        return res.status(400).json({ success: false, message: "Invalid OTP" });
+      }
+      if (user.otpExpire < Date.now()) {
+        return res.status(400).json({ success: false, message: "expired OTP." });
+      }
+  
+      // Update user details
+      user.IsEmailVerified = true;
+      user.otp = null;
+      user.otpExpire = null;
+      await user.save();
+  
+      res.status(201).json({
+        success: true,
+        message: "User data",
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+        },
+      });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ success: false, message: "Server Error", error: error.message });
+    }
+  };
+  
   signin = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).send({ message: "Please Enter Phone & Password" });
+      return res.status(400).send({ message: "Please Enter Email & Password" });
     }
     try {
-      const user = await models.User.findOne({ where: { email } });
+      const user = await models.User.findOne({ where: { email:email } });
       if (!user) {
         return res.status(404).send({ message: "User not found." });
       }
