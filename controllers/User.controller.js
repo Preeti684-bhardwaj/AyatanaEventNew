@@ -338,8 +338,8 @@ class UserController extends BaseController {
         userId: user.id,
       });
     } catch (error) {
-      user.resetOtp = null;
-      user.resetOtpExpire = null;
+      user.otp = null;
+      user.otpExpire = null;
       await user.save({ validate: false });
 
       return res.status(500).send(error.message);
@@ -376,8 +376,8 @@ class UserController extends BaseController {
 
       // Update the user's password and clear OTP fields
       user.password = password;
-      user.resetOtp = null;
-      user.resetOtpExpire = null;
+      user.otp = null;
+      user.otpExpire = null;
 
       await user.save({ validate: true });
 
@@ -441,8 +441,8 @@ class UserController extends BaseController {
           userId: user.id,
         });
       } catch (emailError) {
-        user.resetOtp = null;
-        user.resetOtpExpire = null;
+        user.otp = null;
+        user.otpExpire = null;
         await user.save({ validate: false });
 
         console.error("Failed to send OTP email:", emailError);
