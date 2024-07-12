@@ -357,7 +357,7 @@ class UserController extends BaseController {
         .status(400)
         .send({ message: "Missing required fields: password or OTP" });
     }
-
+    const hashedPassword = await bcrypt.hash(password, 10);
     try {
       // Find the user by ID
       const user = await models.User.findByPk(userId);
@@ -375,7 +375,7 @@ class UserController extends BaseController {
       }
 
       // Update the user's password and clear OTP fields
-      user.password = password;
+      user.password = hashedPassword;
       user.otp = null;
       user.otpExpire = null;
 
