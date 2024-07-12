@@ -136,7 +136,7 @@ class UserController extends BaseController {
         // Email exists but phone doesn't match
         if (existingUserByEmail.phone !== phone) {
           return res.status(400).send({
-            message: "Email already in use",
+            message: "phone already in use",
           });
         }
         // Update existing user
