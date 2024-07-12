@@ -130,6 +130,9 @@ class UserController extends BaseController {
       }
 
       if (existingUserByEmail) {
+        if (existingUserByPhone.isEmailVerified) {
+            return req.status(400).send({message:"User already exists and is verified"});
+          }
         // Email exists but phone doesn't match
         if (existingUserByEmail.phone !== phone) {
           return res.status(400).send({
@@ -241,6 +244,9 @@ class UserController extends BaseController {
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
         return res.status(403).send({ message: "Invalid password." });
+      }
+      if (!user.IsEmailVerified) {
+        return res.status(403).send({message:"Please verify your OTP before logging in"})
       }
 
       const obj = {
