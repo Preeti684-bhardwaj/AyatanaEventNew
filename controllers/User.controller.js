@@ -31,8 +31,8 @@ const generateOtp = () => {
     otp += chars[Math.floor(Math.random() * chars.length)];
   }
 
-  this.resetOtp = otp;
-  this.resetOtpExpire = Date.now() + 15 * 60 * 1000;
+  this.otp = otp;
+  this.otpExpire = Date.now() + 15 * 60 * 1000;
 
   return otp;
 };
