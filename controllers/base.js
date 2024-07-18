@@ -92,6 +92,7 @@ class BaseController {
 
   async list(req, res) {
     try {
+      
       const page = parseInt(req.query.page, 10) || 1;
       const limit = parseInt(req.query.limit, 10) || 10;
       const offset = (page - 1) * limit;
@@ -103,27 +104,33 @@ class BaseController {
       });
 
       res.json({
+        success: true,
         data: results.rows,
         total: results.count,
         totalPages: Math.ceil(results.count / limit),
         currentPage: page
       });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ success: false , error: error.message });
     }
   }
 
   async read(req, res) {
     try {
-      const id = req.params.id;
-      const item = await this.model.findByPk(id);
+
+      const { id } = req.params;
+
+      const item = await this.model.findByPk(id, {
+            include: this.model.associations ? Object.values(this.model.associations) : []
+      });
+
       if (!item) {
-        res.status(404).json({ error: 'Item not found' });
+        res.status(404).json({ success: false , error: 'data not found' });
       } else {
-        res.json(item);
+        res.json({success: true , data: item});
       }
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ success: false , error: error.message });
     }
   }
 

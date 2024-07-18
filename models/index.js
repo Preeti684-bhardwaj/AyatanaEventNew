@@ -3,8 +3,8 @@ const UserModel = require('./User.model.js');
 
 const models = {
     User:require('./User.model.js')(db.sequelize, db.Sequelize.DataTypes),
-    // Event: require('./event.model')(db.sequelize, db.Sequelize.DataTypes),
-    // ExhibitorBrand: require('./exhibitorBrand.model')(db.sequelize, db.Sequelize.DataTypes),
+    Event: require('./event.model')(db.sequelize, db.Sequelize.DataTypes),
+    ExhibitorBrand: require('./exhibitorBrand.model')(db.sequelize, db.Sequelize.DataTypes),
     // Conference: require('./conference.model')(db.sequelize, db.Sequelize.DataTypes),
     // ConferenceTrack: require('./conferenceTrack.model')(db.sequelize, db.Sequelize.DataTypes),
     // ConferenceTalk: require('./conferenceTalk.model')(db.sequelize, db.Sequelize.DataTypes),
@@ -15,8 +15,8 @@ const models = {
 };
 
 // Define relationships
-// models.Event.hasMany(models.ExhibitorBrand, { as: 'ExhibitorBrands' });
-// models.ExhibitorBrand.belongsTo(models.Event);
+models.Event.hasMany(models.ExhibitorBrand, { as: 'ExhibitorBrands' });
+models.ExhibitorBrand.belongsTo(models.Event , {foreignKey: "EventId" , as: "Event"});
 
 // models.Event.hasMany(models.Conference, { as: 'Conferences' });
 // models.Conference.belongsTo(models.Event);

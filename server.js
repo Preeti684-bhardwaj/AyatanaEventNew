@@ -58,6 +58,9 @@ cluster(function(worker) {
 
 	app.use(bodyParser.json());
 	app.use('/', router);
+    app.use(express.static("public/temp"));
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.raw({ type: 'multipart/form-data' }));
 	app.use(passport.initialize());
 	
 	const server = app.listen(process.env.PORT || 17709, function () {
